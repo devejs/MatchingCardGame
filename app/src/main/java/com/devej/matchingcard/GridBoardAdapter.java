@@ -23,7 +23,6 @@ public class GridBoardAdapter extends BaseAdapter {
         this.cardImage= cardImage;
     }
 
-
     @Override
     public int getCount() {
         return CardNo;
@@ -32,7 +31,12 @@ public class GridBoardAdapter extends BaseAdapter {
 
     @Override
     public Object getItem(int position) {
-        return cardImage[position];
+        return Cards.get(position);
+    }
+
+    public void addItem(int cardPic){
+        Cards.add(new CardInfo(cardPic, true));
+        //처음에 보여줘야 하므로 true로 설정
     }
 
     @Override
@@ -44,14 +48,21 @@ public class GridBoardAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;
         if(convertView == null){
-            imageView= new ImageView(Context);  //사실 이거 이해 못함
+            imageView= new ImageView(Context);
             imageView.setLayoutParams(new GridView.LayoutParams(205,205));
             imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             imageView.setPadding(5,5,5,5);
         }else{
             imageView=(ImageView)convertView;
         }
-        imageView.setImageResource(R.drawable.back);
+        //뷰 객체 재활용; 여기서는 필요 없는 코드
+        //imageView.setImageResource(R.drawable.back);
+        CardInfo card= (CardInfo) getItem(position);
+        if(card.getCardOpened()){
+            imageView.setImageResource(card.frontImage);
+        }else{
+            imageView.setImageResource(R.drawable.back);
+        }
         Log.d("fragmentAdapter", position+"view created");
         return imageView;
     }

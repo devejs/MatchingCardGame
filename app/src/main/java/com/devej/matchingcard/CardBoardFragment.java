@@ -24,6 +24,7 @@ public class CardBoardFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Context attActivity;
     GridView gridview;
+    GridBoardAdapter adapter;
     int[] cardImage;
     Boolean[] cardState;
 
@@ -101,12 +102,12 @@ public class CardBoardFragment extends Fragment {
         }
         cardImage = CreateRandCard(cardNo, colNum);
         stagePoint = cardNo * 15;
-        gridview.setAdapter(new GridBoardAdapter(attActivity, cardImage));
+        adapter=new GridBoardAdapter(attActivity, cardImage);
+        for(int i=0; i<cardNo; i++){
+            adapter.addItem(cardImage[i]);
+        }
+        gridview.setAdapter(adapter);
         gridview.setOnItemClickListener(gridBoardOnItemClickListener);
-        // 여기서 문제가
-        // 스테이지 클리어 점수가 넘어가면 액티비티에서 프래그먼트 data를 재생성해서
-        // gridview를 reset할건지 아니면 여기서 스테이지 클리어 확인하면
-        // 바로 data 재생성하고 reset할건지 으ㅡㅡㅁ으므으믕므
 
     }
 
@@ -238,7 +239,11 @@ public class CardBoardFragment extends Fragment {
         cardImage = CreateRandCard(cardNo, colNum);
         Log.d("FragmentInit", "카드 배열 길이" + cardImage.length);
         stagePoint = cardNo * 15;
-        gridview.setAdapter(new GridBoardAdapter(attActivity, cardImage));
+        adapter=new GridBoardAdapter(attActivity, cardImage);
+        for(int i=0; i<cardNo; i++){
+            adapter.addItem(cardImage[i]);
+        }
+        gridview.setAdapter(adapter);
         gridview.setOnItemClickListener(gridBoardOnItemClickListener);
         Log.d("FragmentInit", "어댑터 데이터 적용");
     }
