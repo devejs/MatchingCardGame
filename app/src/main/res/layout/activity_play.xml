@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PlayActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:orientation="horizontal"
+        android:weightSum="5">
+
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="4"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/hintani"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:visibility="invisible"
+                android:text="Hint Test"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+
+            <fragment
+                android:id="@+id/cardboard"
+                android:name="com.devej.matchingcard.CardBoardFragment"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="6"
+                android:layout_margin="20dp"
+                android:background="@drawable/border">
+
+            </fragment>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:background="#000000"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="|STAGE|"
+                android:textSize="25sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <TextView
+                android:id="@+id/stageno"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="1"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="|SCORE|"
+                android:textSize="25sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <TextView
+                android:id="@+id/curscore"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="|TIME|"
+                android:textSize="25sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <TextView
+                android:id="@+id/timer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="0:00"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <Button
+                android:id="@+id/btnhint"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:gravity="left"
+                android:text="> HINT #2"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </Button>
+
+            <Button
+                android:id="@+id/btnpause"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:gravity="left"
+                android:text="> PAUSE"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </Button>
+            <Button
+                android:id="@+id/btnsetting2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:gravity="left"
+                android:text="> SETTING"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </Button>
+            <Button
+                android:id="@+id/btnexit2"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:gravity="left"
+                android:text="> EXIT"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </Button>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/beforeplaying"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#80000000"
+        android:gravity="center"
+        android:text="Touch the screen\nto Start!"
+        android:textSize="50sp"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/dunggeunmo">
+    </TextView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

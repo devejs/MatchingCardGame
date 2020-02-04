@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:orientation="horizontal"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#000000"
+            android:layout_weight="2">
+
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="MATCHING \n  CARD"
+                android:textSize="50sp"
+                android:textColor="#FFFFFF"
+                android:layout_margin="10dp"
+                android:fontFamily="@font/dunggeunmo"
+                android:layout_gravity="center"
+                >
+            </TextView>
+            <EditText
+                android:id="@+id/maintext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:focusableInTouchMode="false"
+                android:lines="6"
+                android:background="@null"
+                android:text="Welcome to Matching Card Game\nCreated by EJS"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </EditText>
+
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:background="#000000"
+            android:gravity="left|center_vertical"
+            android:layout_weight="1">
+
+            <Button
+                android:id="@+id/btnplay"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:text="> PLAY"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/dunggeunmo">
+
+            </Button>
+
+            <Button
+                android:id="@+id/btnrank"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:text="> RANK"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/dunggeunmo">
+
+            </Button>
+
+            <Button
+                android:id="@+id/btnhelp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:text="> HELP"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/dunggeunmo">
+
+            </Button>
+
+            <Button
+                android:id="@+id/btnsetting"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:text="> SETTING"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/dunggeunmo">
+
+            </Button>
+
+            <Button
+                android:id="@+id/btnexit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="#000000"
+                android:text="> EXIT"
+                android:textColor="#FFFFFF"
+                android:textSize="25sp"
+                android:layout_margin="5dp"
+                android:fontFamily="@font/dunggeunmo">
+
+            </Button>
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

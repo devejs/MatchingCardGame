@@ -1,0 +1,177 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RankActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="#000000"
+        android:weightSum="10"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:background="#000000">
+
+            <TextView
+                android:id="@+id/rankTitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="RANKING"
+                android:textSize="25sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+
+            </TextView>
+
+            <Button
+                android:id="@+id/rankexit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="> exit"
+                android:textSize="15sp"
+                android:background="#000000"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </Button>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:weightSum="6"
+            android:background="@drawable/border">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="RANK"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="NAME"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="SCORE"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="RANK"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="NAME"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:text="SCORE"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+        </LinearLayout>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/ranklist"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="6"
+            android:background="@drawable/border"/>
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:text="Wanna find your score?"
+            android:textSize="15sp"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/dunggeunmo">
+
+        </TextView>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="> NAME  "
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+
+            </TextView>
+
+            <EditText
+                android:id="@+id/etfindname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:maxLines="1"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+
+            </EditText>
+
+            <Button
+                android:id="@+id/btnfind"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="> find"
+                android:visibility="invisible"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:background="#000000"
+                android:fontFamily="@font/dunggeunmo">
+
+            </Button>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

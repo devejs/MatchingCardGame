@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HelpActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/border"
+        android:weightSum="3">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/helptitle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="STORY  /  HOW TO PLAY"
+                android:textSize="25sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+
+            </TextView>
+
+            <TextView
+                android:id="@+id/helptext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="15dp"
+                android:lines="10"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+            <TextView
+                android:id="@+id/pageNo"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:text="1/4"
+                android:visibility="invisible"
+                android:textSize="15sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo">
+            </TextView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center">
+
+                <Button
+                    android:id="@+id/btnreplay"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="> REPLAY"
+                    android:visibility="invisible"
+                    android:background="#000000"
+                    android:textSize="15sp"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="@font/dunggeunmo">
+                </Button>
+
+                <Button
+                    android:id="@+id/btnbefore"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="> BEFORE"
+                    android:visibility="invisible"
+                    android:background="#000000"
+                    android:textSize="15sp"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="@font/dunggeunmo">
+                </Button>
+
+                <Button
+                    android:id="@+id/btnnext"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="> NEXT"
+                    android:visibility="invisible"
+                    android:background="#000000"
+                    android:textSize="15sp"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="@font/dunggeunmo">
+                </Button>
+                <Button
+                    android:id="@+id/btnexit3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="> EXIT"
+                    android:visibility="invisible"
+                    android:background="#000000"
+                    android:textSize="15sp"
+                    android:textColor="#FFFFFF"
+                    android:fontFamily="@font/dunggeunmo">
+                </Button>
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/helpImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="20dp"
+            android:layout_weight="1">
+        </ImageView>
+
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

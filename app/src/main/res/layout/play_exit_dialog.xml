@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:background="@drawable/border">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Are you sure to exit?"
+        android:layout_margin="10dp"
+        android:textSize="25sp"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/dunggeunmo">
+    </TextView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter your name to store the score\nIf not, the score will be discarded"
+        android:layout_margin="10dp"
+        android:textSize="15sp"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/dunggeunmo">
+    </TextView>
+    <EditText
+        android:id="@+id/etname"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:maxLength="10"
+        android:maxLines="1"
+        android:textSize="15sp"
+        android:textColor="#FFFFFF"
+        android:fontFamily="@font/dunggeunmo">
+    </EditText>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/btnexitsave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="> SAVE"
+            android:layout_margin="10dp"
+            android:textSize="15sp"
+            android:background="#000000"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/dunggeunmo">
+        </Button>
+        <Button
+            android:id="@+id/btnnosave"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="> EXIT"
+            android:layout_margin="5dp"
+            android:textSize="15sp"
+            android:background="#000000"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/dunggeunmo">
+        </Button>
+        <Button
+            android:id="@+id/btncancle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="> CANCLE"
+            android:layout_margin="10dp"
+            android:textSize="15sp"
+            android:background="#000000"
+            android:textColor="#FFFFFF"
+            android:fontFamily="@font/dunggeunmo">
+        </Button>
+    </LinearLayout>
+
+
+
+</LinearLayout>
