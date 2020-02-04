@@ -14,6 +14,7 @@ import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     DBHelper dbhelper;
     SQLiteDatabase database;
-    BGMService bgm;
+    MediaPlayer mPlayer;
 
     private boolean mIsBound = false;
     private MusicService mServ;
@@ -43,16 +44,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         public void onServiceConnected(ComponentName name, IBinder
                 binder) {
             mServ = ((MusicService.ServiceBinder)binder).getService();
+            Log.d("Service", "Service conntected "+getApplicationContext());
         }
 
         public void onServiceDisconnected(ComponentName name) {
             mServ = null;
+            Log.d("Service", "Service unconntected "+getApplicationContext());
         }
     };
 
     void doBindService(){
         bindService(new Intent(this,MusicService.class),
                 Scon,Context.BIND_AUTO_CREATE);
+        Log.d("Service", "Service bound "+getApplicationContext());
         mIsBound = true;
     }
 
@@ -61,6 +65,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(mIsBound)
         {
             unbindService(Scon);
+            Log.d("Service", "Service unbound "+getApplicationContext());
             mIsBound = false;
         }
     }
@@ -92,6 +97,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Intent music = new Intent();
         music.setClass(this, MusicService.class);
         startService(music);
+        Log.d("Service", "Main Service started");
+
+//        mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm);
+//        if (mPlayer != null) {
+//            mPlayer.setLooping(true);
+//            mPlayer.setVolume(100, 100);
+//        }
+
     }
 
     @Override
@@ -99,18 +112,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.btnplay:
                 i= new Intent(getApplicationContext(), PlayActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);
                 startActivityForResult(i, REQUEST_CODE_SCORE);
                 break;
             case R.id.btnrank:
                 i= new Intent(getApplicationContext(), RankActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);
                 startActivity(i);
                 break;
             case R.id.btnhelp:
                 i= new Intent(getApplicationContext(), HelpActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);
                 startActivity(i);
                 break;
             case R.id.btnsetting:
                 i= new Intent(getApplicationContext(), SettingActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);
                 startActivity(i);
                 break;
             case R.id.btnexit:
@@ -138,6 +155,32 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        return super.onKeyDown(keyCode, event);
+//        if (keyCode == KeyEvent.KEYCODE_HOME) {
+//            Log.d("ActivityLC", "Home Button Clicked");
+//            mServ.pauseMusic();
+//            return true;
+//        }else{
+//            return false;
+//        }
+//    }
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        Log.d("ActivityLC", "Home Button");
+        mServ.pauseMusic();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("ActivityLC", "MainOnRestart");
+        mServ.resumeMusic();
+    }
+
     private void addScore(int score, String name){
         dbhelper= new DBHelper(this, DBHelper.DATABASE_NAME,
                null, DBHelper.DATABASE_VERSION);
@@ -152,14 +195,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+
     @Override
     protected void onPause() {
         super.onPause();
         Log.d("ActivityLC", "MainOnPause");
 
-        if (mServ != null) {
-            mServ.pauseMusic();
-        }
+//        if (mServ != null) {
+//            mServ.pauseMusic();
+//        }
     }
 
     @Override
@@ -174,9 +219,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         Log.d("ActivityLC", "MainOnResume");
 
-        if (mServ != null) {
-            mServ.resumeMusic();
-        }
+//        if (mServ != null) {
+//            mServ.resumeMusic();
+//        }
     }
 
     @Override

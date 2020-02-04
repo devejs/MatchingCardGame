@@ -92,7 +92,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         doBindService();
         Intent music = new Intent();
         music.setClass(this, MusicService.class);
-        startService(music);
+
     }
 
     @Override
@@ -185,40 +185,50 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+//    @Override
+//    protected void onUserLeaveHint() {
+//        super.onUserLeaveHint();
+//        Log.d("ActivityLC", "Home Button");
+//        mServ.pauseMusic();
+//    }
+//
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        Log.d("ActivityLC", "MainOnRestart");
+//        mServ.resumeMusic();
+//    }
+
     @Override
     protected void onPause() {
         super.onPause();
         Log.d("ActivityLC", "PlayOnPause");
-        if (mServ != null) {
-            mServ.pauseMusic();
-        }
+//        if (mServ != null) {
+//            mServ.pauseMusic();
+//        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
 
-        if (mServ != null) {
-            mServ.resumeMusic();
-        }
+//        if (mServ != null) {
+//            mServ.resumeMusic();
+//        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d("ActivityLC", "Play Destroy- Timer interrupted");
+        timerThread.interrupt();
 
-        doUnbindService();
-        Intent music = new Intent();
-        music.setClass(this,MusicService.class);
-        stopService(music);
+//        doUnbindService();
+//        Intent music = new Intent();
+//        music.setClass(this,MusicService.class);
+//        stopService(music);
     }
 
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-////        saveState();
-//        Log.d("activityLife", "Pause");
-//    }
 
     private void saveState() {
         SharedPreferences pref= getSharedPreferences("pref", Activity.MODE_PRIVATE);

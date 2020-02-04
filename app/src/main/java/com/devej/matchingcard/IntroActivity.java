@@ -30,6 +30,7 @@ public class IntroActivity extends AppCompatActivity {
 
         final BackThread introthread = new BackThread();
         introthread.start();
+        Log.d("ActivityLC", "Intro Thread Start");
 
         LinearLayout screen= (LinearLayout) findViewById(R.id.introscreen);
         screen.setOnTouchListener(new View.OnTouchListener() {
