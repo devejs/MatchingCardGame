@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.os.Handler;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     Button play, rank, help, setting, exit;
     TextView title;
@@ -33,42 +33,45 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     Intent i;
     private static final int REQUEST_CODE_SCORE=1996;
 
+    public static Context context_main;
+    Thread musicT;
+
     DBHelper dbhelper;
     SQLiteDatabase database;
     MediaPlayer mPlayer;
 
-    private boolean mIsBound = false;
-    private MusicService mServ;
-    private ServiceConnection Scon =new ServiceConnection(){
+//    private boolean mIsBound = false;
+//    private MusicService mServ;
+//    private ServiceConnection Scon =new ServiceConnection(){
+//
+//        public void onServiceConnected(ComponentName name, IBinder
+//                binder) {
+//            mServ = ((MusicService.ServiceBinder)binder).getService();
+//            Log.d("Service", "Service conntected "+getApplicationContext());
+//        }
+//
+//        public void onServiceDisconnected(ComponentName name) {
+//            mServ = null;
+//            Log.d("Service", "Service unconntected "+getApplicationContext());
+//        }
+//    };
 
-        public void onServiceConnected(ComponentName name, IBinder
-                binder) {
-            mServ = ((MusicService.ServiceBinder)binder).getService();
-            Log.d("Service", "Service conntected "+getApplicationContext());
-        }
-
-        public void onServiceDisconnected(ComponentName name) {
-            mServ = null;
-            Log.d("Service", "Service unconntected "+getApplicationContext());
-        }
-    };
-
-    void doBindService(){
-        bindService(new Intent(this,MusicService.class),
-                Scon,Context.BIND_AUTO_CREATE);
-        Log.d("Service", "Service bound "+getApplicationContext());
-        mIsBound = true;
-    }
-
-    void doUnbindService()
-    {
-        if(mIsBound)
-        {
-            unbindService(Scon);
-            Log.d("Service", "Service unbound "+getApplicationContext());
-            mIsBound = false;
-        }
-    }
+//    void doBindService(){
+//        bindService(new Intent(this,MusicService.class),
+//                Scon,Context.BIND_AUTO_CREATE);
+//        Log.d("Service", "Service bound "+getApplicationContext());
+//        mIsBound = true;
+//    }
+//
+//    void doUnbindService()
+//    {
+//        if(mIsBound)
+//        {
+//            unbindService(Scon);
+//            Log.d("Service", "Service unbound "+getApplicationContext());
+//            mIsBound = false;
+//        }
+//    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,18 +95,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         StartThread thread = new StartThread();
         thread.start();
-//        bgm.onPrepared();
-        doBindService();
+
+//        doBindService();
         Intent music = new Intent();
         music.setClass(this, MusicService.class);
         startService(music);
         Log.d("Service", "Main Service started");
 
-//        mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm);
-//        if (mPlayer != null) {
-//            mPlayer.setLooping(true);
-//            mPlayer.setVolume(100, 100);
-//        }
+
+
+        //백그라운드 스레드 테스트
+//        musicT= new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//            mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm);
+//            if (mPlayer != null) {
+//                mPlayer.setLooping(true);
+//                mPlayer.setVolume(100, 100);
+//          }
+//            mPlayer.start();
+//            }
+//        });
+//        musicT.start();
+//        context_main=this;
 
     }
 
@@ -165,20 +179,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //        }else{
 //            return false;
 //        }
-//    }
+//    } //key event를 포기한 이유는 home key가 인식 안되는 기기도 있기 때문
+        // -> 대신 onUserLeaveHint() 사용
+        // 간단하게 말해서 액티비티가 사용자 이벤트에 의해 백그라운드로 갈 때 콜백됨(홈키같은거)
 
     @Override
     protected void onUserLeaveHint() {
         super.onUserLeaveHint();
         Log.d("ActivityLC", "Home Button");
-        mServ.pauseMusic();
+        super.getmServ().pauseMusic();
     }
 
     @Override
     protected void onRestart() {
         super.onRestart();
         Log.d("ActivityLC", "MainOnRestart");
-        mServ.resumeMusic();
+        super.getmServ().resumeMusic();
     }
 
     private void addScore(int score, String name){

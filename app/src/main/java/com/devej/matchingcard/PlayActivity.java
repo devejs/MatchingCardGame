@@ -23,7 +23,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.os.Handler;
 
-public class PlayActivity extends AppCompatActivity implements View.OnClickListener,
+public class PlayActivity extends BaseActivity implements View.OnClickListener,
         CardBoardFragment.OnFragmentInteractionListener {
 
     CardBoardFragment board;
@@ -89,10 +89,6 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         //OnPause OnResume으로 재구현해야될듯
         //액티비티 수명주기 추가 공부 필요!!
 
-        doBindService();
-        Intent music = new Intent();
-        music.setClass(this, MusicService.class);
-
     }
 
     @Override
@@ -156,34 +152,34 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         //필요 없어짐
     }
 
-    private boolean mIsBound = false;
-    private MusicService mServ;
-    private ServiceConnection Scon =new ServiceConnection(){
-
-        public void onServiceConnected(ComponentName name, IBinder
-                binder) {
-            mServ = ((MusicService.ServiceBinder)binder).getService();
-        }
-
-        public void onServiceDisconnected(ComponentName name) {
-            mServ = null;
-        }
-    };
-
-    void doBindService(){
-        bindService(new Intent(this,MusicService.class),
-                Scon,Context.BIND_AUTO_CREATE);
-        mIsBound = true;
-    }
-
-    void doUnbindService()
-    {
-        if(mIsBound)
-        {
-            unbindService(Scon);
-            mIsBound = false;
-        }
-    }
+//    private boolean mIsBound = false;
+//    private MusicService mServ;
+//    private ServiceConnection Scon =new ServiceConnection(){
+//
+//        public void onServiceConnected(ComponentName name, IBinder
+//                binder) {
+//            mServ = ((MusicService.ServiceBinder)binder).getService();
+//        }
+//
+//        public void onServiceDisconnected(ComponentName name) {
+//            mServ = null;
+//        }
+//    };
+//
+//    void doBindService(){
+//        bindService(new Intent(this,MusicService.class),
+//                Scon,Context.BIND_AUTO_CREATE);
+//        mIsBound = true;
+//    }
+//
+//    void doUnbindService()
+//    {
+//        if(mIsBound)
+//        {
+//            unbindService(Scon);
+//            mIsBound = false;
+//        }
+//    }
 
 //    @Override
 //    protected void onUserLeaveHint() {
@@ -192,12 +188,13 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
 //        mServ.pauseMusic();
 //    }
 //
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        Log.d("ActivityLC", "MainOnRestart");
-//        mServ.resumeMusic();
-//    }
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("ActivityLC", "PlayOnRestart");
+        timerThread.interrupt();
+        beforeplaying.setVisibility(View.VISIBLE);
+    }
 
     @Override
     protected void onPause() {
@@ -211,7 +208,7 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-
+        Log.d("ActivityLC", "PlayOnResume");
 //        if (mServ != null) {
 //            mServ.resumeMusic();
 //        }
@@ -221,14 +218,10 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     protected void onDestroy() {
         super.onDestroy();
         Log.d("ActivityLC", "Play Destroy- Timer interrupted");
-        timerThread.interrupt();
-
-//        doUnbindService();
-//        Intent music = new Intent();
-//        music.setClass(this,MusicService.class);
-//        stopService(music);
+        if(timerThread.getState()!= Thread.State.TERMINATED){
+            timerThread.interrupt();
+        }
     }
-
 
     private void saveState() {
         SharedPreferences pref= getSharedPreferences("pref", Activity.MODE_PRIVATE);
@@ -352,6 +345,8 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         int leftSec=180-pauseTimeSec;
         Handler timeHd= new Handler();
 
+        //시간 변경 메소드 하나 만들어도 될 듯 몇분 할지 int 파라미터로 받아서
+
         @Override
         public void run() {
             for(int i=0; i<leftSec; i++){
@@ -386,6 +381,14 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             Log.d("timer", "Timer 종료");
+            timeHd.post(new Runnable() {
+                @Override
+                public void run() {
+                    ExitDialog();
+                    Log.d("timer","스레드 객체 상태 확인"+timerThread);
+                    Log.d("timer", "스레드 getState: "+timerThread.getState());
+                }
+            });
         }
     }
 

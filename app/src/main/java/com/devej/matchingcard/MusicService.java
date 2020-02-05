@@ -6,6 +6,7 @@ import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnErrorListener;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.Log;
 import android.widget.Toast;
 
 public class MusicService extends Service  implements MediaPlayer.OnErrorListener {
@@ -25,13 +26,21 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
 
     @Override
     public IBinder onBind(Intent arg0) {
+        //Service 인터페이스
+        Log.d("Service", "onBind; ServiceBinder, 즉 GetMusicService");
         return mBinder;
+    }
+
+    @Override
+    public boolean onUnbind(Intent intent) {
+        Log.d("Service", "onUnbind");
+        return super.onUnbind(intent);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        Log.d("Service", "Service onCreate");
         mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm);
         mPlayer.setOnErrorListener(this);
 
@@ -54,6 +63,7 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.d("Service", "Service onStart");
         mPlayer.start();
         return START_STICKY;
     }
@@ -82,6 +92,7 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
     @Override
     public void onDestroy() {
         super.onDestroy();
+        Log.d("Service", "Service onDestroy");
         if (mPlayer != null) {
             try {
                 mPlayer.stop();

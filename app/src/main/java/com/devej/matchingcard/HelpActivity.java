@@ -24,7 +24,7 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import android.os.Handler;
 
-public class HelpActivity extends AppCompatActivity implements View.OnClickListener {
+public class HelpActivity extends BaseActivity implements View.OnClickListener {
 
     TextView helpMessage, pageNo;
     ImageView helpImage;

@@ -18,7 +18,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class SettingActivity extends AppCompatActivity implements View.OnClickListener {
+public class SettingActivity extends BaseActivity implements View.OnClickListener {
 
     Button exit, conmusic, setname, noname, save;
     Boolean musicState;
@@ -53,9 +53,11 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         noname.setOnClickListener(this);
         save.setOnClickListener(this);
 
-        doBindService();
-        Intent music = new Intent();
-        music.setClass(this, MusicService.class);
+
+
+//        doBindService();
+//        Intent music = new Intent();
+//        music.setClass(this, MusicService.class);
 
         restoreState();
         Log.d("Service", "Setting restore state"+musicState);
@@ -79,13 +81,14 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
                 if(musicState){
                     Log.d("setting", "Touched");
                     //(구현 필요) turning off the music
-                    mServ.pauseMusic();
+                    //        ((MainActivity)MainActivity.context_main).musicT.interrupt();
+                    super.getmServ().pauseMusic();
                     conmusic.setText("> TURN ON THE MUSIC");
                     musicState=false;
                     Log.d("Service", "Setting restore state"+musicState);
                 }else{
                     //(구현 필요) turning on the music
-                    mServ.resumeMusic();
+                    super.getmServ().resumeMusic();
                     conmusic.setText("> TURN OFF THE MUSIC");
                     musicState=true;
                     Log.d("Service", "Setting restore state"+musicState);
@@ -118,19 +121,19 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
 
     }
 
-    @Override
-    protected void onUserLeaveHint() {
-        super.onUserLeaveHint();
-        Log.d("ActivityLC", "Home Button");
-        mServ.pauseMusic();
-    }
-
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        Log.d("ActivityLC", "MainOnRestart");
-        mServ.resumeMusic();
-    }
+//    @Override
+//    protected void onUserLeaveHint() {
+//        super.onUserLeaveHint();
+//        Log.d("ActivityLC", "Home Button");
+//        mServ.pauseMusic();
+//    }
+//
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        Log.d("ActivityLC", "MainOnRestart");
+//        mServ.resumeMusic();
+//    }
 
     private void saveState() {
         SharedPreferences pref= getSharedPreferences("pref", Activity.MODE_PRIVATE);
@@ -148,34 +151,34 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         }
     }
 
-    private boolean mIsBound = false;
-    private MusicService mServ;
-    private ServiceConnection Scon =new ServiceConnection(){
-
-        public void onServiceConnected(ComponentName name, IBinder
-                binder) {
-            mServ = ((MusicService.ServiceBinder)binder).getService();
-        }
-
-        public void onServiceDisconnected(ComponentName name) {
-            mServ = null;
-        }
-    };
-
-    void doBindService(){
-        bindService(new Intent(this,MusicService.class),
-                Scon, Context.BIND_AUTO_CREATE);
-        mIsBound = true;
-    }
-
-    void doUnbindService()
-    {
-        if(mIsBound)
-        {
-            unbindService(Scon);
-            mIsBound = false;
-        }
-    }
+//    private boolean mIsBound = false;
+//    private MusicService mServ;
+//    private ServiceConnection Scon =new ServiceConnection(){
+//
+//        public void onServiceConnected(ComponentName name, IBinder
+//                binder) {
+//            mServ = ((MusicService.ServiceBinder)binder).getService();
+//        }
+//
+//        public void onServiceDisconnected(ComponentName name) {
+//            mServ = null;
+//        }
+//    };
+//
+//    void doBindService(){
+//        bindService(new Intent(this,MusicService.class),
+//                Scon, Context.BIND_AUTO_CREATE);
+//        mIsBound = true;
+//    }
+//
+//    void doUnbindService()
+//    {
+//        if(mIsBound)
+//        {
+//            unbindService(Scon);
+//            mIsBound = false;
+//        }
+//    }
 
     @Override
     protected void onPause() {
@@ -201,9 +204,5 @@ public class SettingActivity extends AppCompatActivity implements View.OnClickLi
         super.onDestroy();
         Log.d("ActivityLC", "Setting OnDestroy");
 
-        doUnbindService();
-        Intent music = new Intent();
-        music.setClass(this,MusicService.class);
-        stopService(music);
     }
 }

@@ -17,7 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class RankActivity extends AppCompatActivity implements View.OnClickListener {
+public class RankActivity extends BaseActivity implements View.OnClickListener {
 
     DBHelper dbhelper;
     SQLiteDatabase database;
@@ -79,23 +79,6 @@ public class RankActivity extends AppCompatActivity implements View.OnClickListe
                 break;
         }
     }
-
-    @Override
-    protected void onUserLeaveHint() {
-        super.onUserLeaveHint();
-        Log.d("ActivityLC", "Home Button");
-//        mServ.pauseMusic();
-        finish();
-        Log.d("ActivityLC", "Rank finish");
-    }
-
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        Log.d("ActivityLC", "MainOnRestart");
-//        mServ.resumeMusic();
-//    }
-
 
     @Override
     protected void onPause() {
