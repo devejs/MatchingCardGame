@@ -92,23 +92,26 @@ public class CardBoardFragment extends Fragment {
         //프래그먼트 구성요소 초기화
         //액티비티 완전히 생성된 이후-> 안정적
         super.onActivityCreated(savedInstanceState);
-        selectedCard = 0;
-        stageNo = ((PlayActivity) attActivity).playingstage; //stageNo 받아오기
-        calCardNo(stageNo); //cardNo, colNum 초기화됨
-        cardState = new Boolean[cardNo];
-        for (int i = 0; i < cardNo; i++) {
-            cardState[i] = false;
-            //i번째 카드 오픈 안된 상태-> 클리어 체크
-        }
-        cardImage = CreateRandCard(cardNo, colNum);
-        stagePoint = cardNo * 15;
-        adapter=new GridBoardAdapter(attActivity, cardImage);
-        for(int i=0; i<cardNo; i++){
-            adapter.addItem(cardImage[i]);
-        }
-        gridview.setAdapter(adapter);
-        gridview.setOnItemClickListener(gridBoardOnItemClickListener);
+        if(((PlayActivity)attActivity).message.equals("init")){
+            selectedCard = 0;
+            stageNo = ((PlayActivity) attActivity).playingstage; //stageNo 받아오기
+            calCardNo(stageNo); //cardNo, colNum 초기화됨
+            cardState = new Boolean[cardNo];
+            for (int i = 0; i < cardNo; i++) {
+                cardState[i] = false;
+                //i번째 카드 오픈 안된 상태-> 클리어 체크
+            }
+            cardImage = CreateRandCard(cardNo, colNum);
+            stagePoint = cardNo * 15;
+            adapter=new GridBoardAdapter(attActivity, cardImage);
+            for(int i=0; i<cardNo; i++){
+                adapter.addItem(cardImage[i]);
+            }
+            gridview.setAdapter(adapter);
+            gridview.setOnItemClickListener(gridBoardOnItemClickListener);
+        }else if(((PlayActivity)attActivity).message.equals("recreate")){
 
+        }
     }
 
     @Override

@@ -2,8 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.devej.matchingcard">
 
-    <uses-permission android:name="android.permission.WAKE_LOCK" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -11,29 +9,26 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <service
-            android:name=".MusicService"
-            android:enabled="true" />
-        <activity android:name=".RankActivity"
+        <activity
+            android:name=".RankActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"></activity>
 
-        </activity>
-        <activity android:name=".PlayActivity"
+        <activity
+            android:name=".PlayActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape">
+            android:screenOrientation="landscape"></activity>
 
-        </activity>
         <activity
             android:name=".HelpActivity"
-            android:theme="@style/DialogueTheme"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+            android:theme="@style/DialogueTheme" />
         <activity
             android:name=".SettingActivity"
-            android:theme="@style/DialogueTheme"
             android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape"/>
+            android:screenOrientation="landscape"
+            android:theme="@style/DialogueTheme" />
         <activity
             android:name=".IntroActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
@@ -48,7 +43,13 @@
             android:name=".MainActivity"
             android:configChanges="keyboard|keyboardHidden|orientation"
             android:screenOrientation="landscape" />
+        <service
+            android:name=".MusicService"
+            android:enabled="true">
+        </service>
+
     </application>
 
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
 </manifest>

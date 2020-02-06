@@ -6,9 +6,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -35,9 +38,12 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener,
     public int playingstage=1 , playingscore=0 ;
     int pauseTimeSec=0;
     Thread timerThread;
+    String message;
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+
+    BroadcastReceiver screenReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +70,10 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener,
         // 프래그먼트 내부 세부 컴포넌트 접근
         // 프래그먼트 매니저 선언
         fragmentManager = getSupportFragmentManager();
+        message="init";
 
-        clearData();
+        //clearData();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         beforeplaying.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -88,6 +96,30 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener,
         });
         //OnPause OnResume으로 재구현해야될듯
         //액티비티 수명주기 추가 공부 필요!!
+
+        screenReceiver = new BroadcastReceiver() {
+            public static final String ScreenOff= "android.intent.action.SCREEN_OFF";
+            public static final String ScreenOn= "android.intent.action.SCREEN_ON";
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(ScreenOff)){
+                    Log.d("Broadcast", "Screen Off");
+                    timerThread.interrupt();
+                    PlayActivity.super.getmServ().pauseMusic();
+                }else if(intent.getAction().equals(ScreenOn)){
+                    Log.d("Broadcast", "Screen On");
+                    message="recreate";
+                    Log.d("Broadcast", message);
+                    beforeplaying.setVisibility(View.VISIBLE);
+                    PlayActivity.super.getmServ().resumeMusic();
+                }
+            }
+        };
+        IntentFilter intentFilter= new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(screenReceiver, intentFilter);
 
     }
 
@@ -217,10 +249,11 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener,
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        Log.d("ActivityLC", "Play Destroy- Timer interrupted");
-        if(timerThread.getState()!= Thread.State.TERMINATED){
-            timerThread.interrupt();
-        }
+        Log.d("ActivityLC", "Play onDestroy");
+//        if(timerThread.getState()!= Thread.State.TERMINATED){
+//            timerThread.interrupt();
+//        }
+        unregisterReceiver(screenReceiver);
     }
 
     private void saveState() {

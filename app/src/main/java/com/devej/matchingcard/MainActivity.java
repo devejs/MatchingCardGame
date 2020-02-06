@@ -4,10 +4,12 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
@@ -16,6 +18,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -26,7 +29,7 @@ import android.widget.Toast;
 public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     Button play, rank, help, setting, exit;
-    TextView title;
+    TextView title, threadtext;
     EditText maintext;
     Handler handler= new Handler();
     String message="Press play to start...";
@@ -86,12 +89,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         exit=(Button)findViewById(R.id.btnexit);
         title=(TextView)findViewById(R.id.title);
         maintext=(EditText)findViewById(R.id.maintext);
+        threadtext=(TextView)findViewById(R.id.threadtext);
 
         play.setOnClickListener(this);
         rank.setOnClickListener(this);
         help.setOnClickListener(this);
         setting.setOnClickListener(this);
         exit.setOnClickListener(this);
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         StartThread thread = new StartThread();
         thread.start();
@@ -101,7 +107,6 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
         music.setClass(this, MusicService.class);
         startService(music);
         Log.d("Service", "Main Service started");
-
 
 
         //백그라운드 스레드 테스트
@@ -264,7 +269,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        maintext.append("\n\n"+message);
+                        threadtext.setText("\n\n"+message);
                     }
                 },1000);
 
