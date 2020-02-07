@@ -15,9 +15,9 @@
             android:screenOrientation="landscape"></activity>
 
         <activity
-            android:name=".PlayActivity"
-            android:configChanges="keyboard|keyboardHidden|orientation"
-            android:screenOrientation="landscape"></activity>
+        android:name=".PlayActivity"
+        android:configChanges="keyboard|keyboardHidden|orientation"
+        android:screenOrientation="landscape"></activity>
 
         <activity
             android:name=".HelpActivity"

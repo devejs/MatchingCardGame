@@ -1,7 +1,10 @@
 package com.devej.matchingcard;
 
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnErrorListener;
 import android.os.Binder;
@@ -14,6 +17,7 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
     private final IBinder mBinder = new ServiceBinder();
     MediaPlayer mPlayer;
     private int length = 0;
+    BroadcastReceiver serviceReceiver;
 
     public MusicService() {
     }
@@ -27,7 +31,7 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
     @Override
     public IBinder onBind(Intent arg0) {
         //Service 인터페이스
-        Log.d("Service", "onBind; ServiceBinder, 즉 GetMusicService");
+        Log.d("Service", "onBind");
         return mBinder;
     }
 
@@ -59,18 +63,49 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
                 return true;
             }
         });
+
+        BroadcastReceiver serviceReceiver = new BroadcastReceiver() {
+            public static final String PAUSE_M="com.devej.matchingcard.ACTION_PAUSE";
+            public static final String RESUME_M="com.devej.matchingcard.ACTION_RESUME";
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                String action= intent.getAction();
+
+                if(action.equals(PAUSE_M)){
+                    pauseMusic();
+                    Log.d("Service", "pause from broadcast");
+                }else if(action.equals(RESUME_M)){
+                    resumeMusic();
+                    Log.d("Service", "resume from broadcast");
+                }
+            }
+        };
+        IntentFilter filter= new IntentFilter();
+        filter.addAction("com.devej.matchingcard.ACTION_PAUSE");
+        filter.addAction("com.devej.matchingcard.ACTION_RESUME");
+        //registerReceiver(serviceReceiver, filter);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("Service", "Service onStart");
         mPlayer.start();
+//        new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//                for(int i=0; i<30; i++){
+//
+//                }
+//                stopServiceItself();
+//            }
+//        }).start();
         return START_STICKY;
     }
 
     public void pauseMusic() {
         if (mPlayer.isPlaying()) {
             mPlayer.pause();
+            Log.d("Service", "music pause");
             length = mPlayer.getCurrentPosition();
 
         }
@@ -80,13 +115,26 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
         if (mPlayer.isPlaying() == false) {
             mPlayer.seekTo(length);
             mPlayer.start();
+            Log.d("Service", "music resume");
         }
     }
 
     public void stopMusic() {
-        mPlayer.stop();
-        mPlayer.release();
-        mPlayer = null;
+        if(mPlayer.isPlaying()){
+            mPlayer.stop();
+        }
+    }
+
+    public void restartMusic(){
+        if(!mPlayer.isPlaying()){
+            mPlayer.start();
+            Log.d("Service", "music restart");
+        }
+    }
+
+    public void stopServiceItself(){
+        stopSelf();
+        Log.d("Service", "stopSelf()");
     }
 
     @Override
@@ -101,6 +149,7 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
                 mPlayer = null;
             }
         }
+        //unregisterReceiver(serviceReceiver);
     }
 
     public boolean onError(MediaPlayer mp, int what, int extra) {
@@ -116,4 +165,6 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
         }
         return false;
     }
+
+
 }

@@ -254,6 +254,13 @@ public class PlayActivity extends BaseActivity implements View.OnClickListener,
 //            timerThread.interrupt();
 //        }
         unregisterReceiver(screenReceiver);
+
+//        music.setClass(MainActivity.this ,MusicService.class);
+        Log.d("sleepy", "before");
+        //stopService(super.getMusic());
+        stopService(new Intent(getApplicationContext(), MusicService.class));
+        Log.d("sleepy", "after"+ super.getmServ());
+        //doUnbindService();
     }
 
     private void saveState() {

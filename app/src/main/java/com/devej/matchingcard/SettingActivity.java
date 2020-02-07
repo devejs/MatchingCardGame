@@ -54,13 +54,12 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
         save.setOnClickListener(this);
 
 
-
-//        doBindService();
+        //doBindService();
 //        Intent music = new Intent();
 //        music.setClass(this, MusicService.class);
 
         restoreState();
-        Log.d("Service", "Setting restore state"+musicState);
+        //Log.d("Service", "Setting restore state"+musicState);
         if(musicState){
             //state true-> music playing
             conmusic.setText("> TURN OFF THE MUSIC");
@@ -68,6 +67,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
             //state false-> music is not playing
             conmusic.setText("> TURN ON THE MUSIC");
         }
+
 
     }
 
@@ -82,13 +82,21 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     Log.d("setting", "Touched");
                     //(구현 필요) turning off the music
                     //        ((MainActivity)MainActivity.context_main).musicT.interrupt();
-                    super.getmServ().pauseMusic();
+//                    super.getmServ().pauseMusic();
+                    //super.getmServ().stopMusic();
+                    Intent i=new Intent("com.devej.matchingcard.ACTION_PAUSE");
+                    this.sendBroadcast(i);
+                    Log.d("Broadcast", "broadcast to pause");
                     conmusic.setText("> TURN ON THE MUSIC");
                     musicState=false;
                     Log.d("Service", "Setting restore state"+musicState);
                 }else{
                     //(구현 필요) turning on the music
-                    super.getmServ().resumeMusic();
+//                    super.getmServ().resumeMusic();
+                    //super.getmServ().restartMusic();
+                    Intent i=new Intent("com.devej.matchingcard.ACTION_RESUME");
+                    this.sendBroadcast(i);
+                    Log.d("Broadcast", "broadcast to resume");
                     conmusic.setText("> TURN OFF THE MUSIC");
                     musicState=true;
                     Log.d("Service", "Setting restore state"+musicState);
@@ -203,6 +211,6 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
     protected void onDestroy() {
         super.onDestroy();
         Log.d("ActivityLC", "Setting OnDestroy");
-
+        //doUnbindService();
     }
 }

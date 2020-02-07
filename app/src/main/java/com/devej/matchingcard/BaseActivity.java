@@ -15,24 +15,30 @@ public class BaseActivity extends AppCompatActivity {
 
     private boolean mIsBound = false;
     private MusicService mServ;
+    private Intent music;
+
+    public Intent getMusic() {
+        return music;
+    }
+
     private ServiceConnection Scon =new ServiceConnection(){
 
         public void onServiceConnected(ComponentName name, IBinder
                 binder) {
             mServ = ((MusicService.ServiceBinder)binder).getService();
-            Log.d("Service", "Service conntected "+getApplicationContext());
+            Log.d("Service- call Component", "Service conntected ");
         }
 
         public void onServiceDisconnected(ComponentName name) {
             mServ = null;
-            Log.d("Service", "Service unconntected "+getApplicationContext());
+            Log.d("Service- call Component", "Service unconntected ");
         }
     };
 
     void doBindService(){
         bindService(new Intent(this,MusicService.class),
                 Scon, Context.BIND_AUTO_CREATE);
-        Log.d("Service", "Service bound "+getApplicationContext());
+        Log.d("Service- call Component", "bindService() ");
         mIsBound = true;
     }
 
@@ -41,13 +47,13 @@ public class BaseActivity extends AppCompatActivity {
         if(mIsBound)
         {
             unbindService(Scon);
-            Log.d("Service", "Service unbound "+getApplicationContext());
+            Log.d("Service- call Component", "unbindService() ");
             mIsBound = false;
         }
     }
 
     public MusicService getmServ() {
-        Log.d("Service", mServ+"서비스객체");
+       //Log.d("Service", mServ+"서비스객체");
         return this.mServ;
     }
 
@@ -56,8 +62,10 @@ public class BaseActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         doBindService();
-//        Intent music = new Intent();
-//        music.setClass(this, MusicService.class);
+        music = new Intent();
+        music.setClass(this, MusicService.class);
+        //Log.d("Service", "onCreate activity service"+this.getLocalClassName());
+        //여기서 this를 걸어버리면 액티비티마다 본인 context 가져오네
     }
 
     @Override
@@ -65,12 +73,12 @@ public class BaseActivity extends AppCompatActivity {
         super.onUserLeaveHint();
         Log.d("ActivityLC", "Home Button");
         mServ.pauseMusic();
-        Log.d("Service", mServ+"");
+       // Log.d("Service", mServ+"");
     }
     @Override
     protected void onRestart() {
         super.onRestart();
-        Log.d("ActivityLC", "Music Resume");
+      //  Log.d("ActivityLC", "Music Resume");
         mServ.resumeMusic();
     }
 
@@ -79,7 +87,7 @@ public class BaseActivity extends AppCompatActivity {
         super.onDestroy();
 
         doUnbindService();
-//        Intent music = new Intent();
-//        music.setClass(this,MusicService.class);
+//        music.setClass(this,MusicService.class
+//        Intent music = new Intent(););
     }
 }
