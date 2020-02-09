@@ -15,6 +15,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.os.Handler;
 
+
 import java.util.Random;
 
 
@@ -36,6 +37,7 @@ public class CardBoardFragment extends Fragment {
     int selectedCard;
     int tempSelPos;
     ImageView tempView;
+    Handler hd= new Handler();
 
     //맨 처음에 데이터 생성-> 그리드뷰 inflate
     //그리드뷰 inflate하자마자 전부 다 back으로 이미지 덮어야 함
@@ -109,6 +111,25 @@ public class CardBoardFragment extends Fragment {
             }
             gridview.setAdapter(adapter);
             gridview.setOnItemClickListener(gridBoardOnItemClickListener);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    hd.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i=0; i<cardNo; i++){
+                                adapter.modifyItem(i, false);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }).start();
         }else if(((PlayActivity)attActivity).message.equals("recreate")){
 
         }
@@ -249,6 +270,25 @@ public class CardBoardFragment extends Fragment {
         gridview.setAdapter(adapter);
         gridview.setOnItemClickListener(gridBoardOnItemClickListener);
         Log.d("FragmentInit", "어댑터 데이터 적용");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                hd.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int i=0; i<cardNo; i++){
+                            adapter.modifyItem(i, false);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
     }
 
     public int[] CreateRandCard(int cardNo, int colNum) {

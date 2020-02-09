@@ -78,7 +78,7 @@ public class BaseActivity extends AppCompatActivity {
     @Override
     protected void onRestart() {
         super.onRestart();
-      //  Log.d("ActivityLC", "Music Resume");
+        Log.d("ActivityLC", "Music Resume");
         mServ.resumeMusic();
     }
 

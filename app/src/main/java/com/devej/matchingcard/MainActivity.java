@@ -120,8 +120,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
 
 //        Intent music = new Intent();
 //        music.setClass(this, MusicService.class);
-        //startService(super.getMusic());
-        //Log.d("Service- call Component", "startService()");
+        startService(super.getMusic());
+        Log.d("Service- call Component", "startService()");
         testMusicState=true;
 
 
@@ -294,8 +294,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         //doUnbindService();
         Intent music = new Intent();
         music.setClass(this,MusicService.class);
-        //stopService(music);
-        //Log.d("Service- call Component", "stopService()");
+        stopService(music);
+        Log.d("Service- call Component", "stopService()");
     }
 
     @Override

@@ -44,6 +44,10 @@ public class GridBoardAdapter extends BaseAdapter {
         return position;
     }
 
+    public void modifyItem(int position, Boolean cardOpened){
+        Cards.get(position).setCardOpened(cardOpened);
+    }
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         ImageView imageView;

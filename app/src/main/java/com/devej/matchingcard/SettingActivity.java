@@ -82,7 +82,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     Log.d("setting", "Touched");
                     //(구현 필요) turning off the music
                     //        ((MainActivity)MainActivity.context_main).musicT.interrupt();
-//                    super.getmServ().pauseMusic();
+                    super.getmServ().pauseMusic();
                     //super.getmServ().stopMusic();
                     Intent i=new Intent("com.devej.matchingcard.ACTION_PAUSE");
                     this.sendBroadcast(i);
@@ -92,7 +92,7 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     Log.d("Service", "Setting restore state"+musicState);
                 }else{
                     //(구현 필요) turning on the music
-//                    super.getmServ().resumeMusic();
+                    super.getmServ().resumeMusic();
                     //super.getmServ().restartMusic();
                     Intent i=new Intent("com.devej.matchingcard.ACTION_RESUME");
                     this.sendBroadcast(i);
