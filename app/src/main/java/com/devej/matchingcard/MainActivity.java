@@ -124,6 +124,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener, 
         Log.d("Service- call Component", "startService()");
         testMusicState=true;
 
+        Log.d("ProcessTestActivityLC", "Game Process PID: "+android.os.Process.myPid());
+
 
         //백그라운드 스레드 테스트
 //        musicT= new Thread(new Runnable() {
