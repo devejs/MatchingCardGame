@@ -84,9 +84,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     //        ((MainActivity)MainActivity.context_main).musicT.interrupt();
                     super.getmServ().pauseMusic();
                     //super.getmServ().stopMusic();
-                    Intent i=new Intent("com.devej.matchingcard.ACTION_PAUSE");
-                    this.sendBroadcast(i);
-                    Log.d("Broadcast", "broadcast to pause");
+//                    Intent i=new Intent("com.devej.matchingcard.ACTION_PAUSE");
+//                    this.sendBroadcast(i);
+//                    Log.d("Broadcast", "broadcast to pause");
                     conmusic.setText("> TURN ON THE MUSIC");
                     musicState=false;
                     Log.d("Service", "Setting restore state"+musicState);
@@ -94,9 +94,9 @@ public class SettingActivity extends BaseActivity implements View.OnClickListene
                     //(구현 필요) turning on the music
                     super.getmServ().resumeMusic();
                     //super.getmServ().restartMusic();
-                    Intent i=new Intent("com.devej.matchingcard.ACTION_RESUME");
-                    this.sendBroadcast(i);
-                    Log.d("Broadcast", "broadcast to resume");
+//                    Intent i=new Intent("com.devej.matchingcard.ACTION_RESUME");
+//                    this.sendBroadcast(i);
+//                    Log.d("Broadcast", "broadcast to resume");
                     conmusic.setText("> TURN OFF THE MUSIC");
                     musicState=true;
                     Log.d("Service", "Setting restore state"+musicState);

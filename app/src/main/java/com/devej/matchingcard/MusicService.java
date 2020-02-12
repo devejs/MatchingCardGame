@@ -45,6 +45,7 @@ public class MusicService extends Service  implements MediaPlayer.OnErrorListene
     public void onCreate() {
         super.onCreate();
         Log.d("Service", "Service onCreate");
+        Log.d("ProcessTestActivityLC", "Service PID: "+android.os.Process.myPid());
         mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm);
         mPlayer.setOnErrorListener(this);
 
