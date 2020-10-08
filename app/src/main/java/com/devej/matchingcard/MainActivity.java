@@ -3,18 +3,23 @@ package com.devej.matchingcard;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.database.sqlite.SQLiteDatabase;
 import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -22,54 +27,74 @@ import android.widget.TextView;
 import android.os.Handler;
 import android.widget.Toast;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener {
+import static android.view.KeyEvent.KEYCODE_BACK;
+
+public class MainActivity extends BaseActivity implements View.OnClickListener, View.OnKeyListener {
 
     Button play, rank, help, setting, exit;
-    TextView title;
+    TextView title, threadtext;
     EditText maintext;
     Handler handler= new Handler();
     String message="Press play to start...";
     Intent i;
     private static final int REQUEST_CODE_SCORE=1996;
 
+    public static Context context_main;
+    Thread musicT;
+
     DBHelper dbhelper;
     SQLiteDatabase database;
-    BGMService bgm;
+    MediaPlayer mPlayer;
+    Boolean testMusicState;
 
-    private boolean mIsBound = false;
-    private MusicService mServ;
-    private ServiceConnection Scon =new ServiceConnection(){
+//    private boolean mIsBound = false;
+//    private MusicService mServ;
+//    private ServiceConnection Scon =new ServiceConnection(){
+//
+//        public void onServiceConnected(ComponentName name, IBinder
+//                binder) {
+//            mServ = ((MusicService.ServiceBinder)binder).getService();
+//            Log.d("Service", "Service conntected "+getApplicationContext());
+//        }
+//
+//        public void onServiceDisconnected(ComponentName name) {
+//            mServ = null;
+//            Log.d("Service", "Service unconntected "+getApplicationContext());
+//        }
+//    };
 
-        public void onServiceConnected(ComponentName name, IBinder
-                binder) {
-            mServ = ((MusicService.ServiceBinder)binder).getService();
+//    void doBindService(){
+//        bindService(new Intent(this,MusicService.class),
+//                Scon,Context.BIND_AUTO_CREATE);
+//        Log.d("Service", "Service bound "+getApplicationContext());
+//        mIsBound = true;
+//    }
+//
+//    void doUnbindService()
+//    {
+//        if(mIsBound)
+//        {
+//            unbindService(Scon);
+//            Log.d("Service", "Service unbound "+getApplicationContext());
+//            mIsBound = false;
+//        }
+//    }
+
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if(keyCode==KEYCODE_BACK){
+            Log.d("ActivityLC", keyCode+"KEYCODE_BACK 발생");
         }
 
-        public void onServiceDisconnected(ComponentName name) {
-            mServ = null;
-        }
-    };
-
-    void doBindService(){
-        bindService(new Intent(this,MusicService.class),
-                Scon,Context.BIND_AUTO_CREATE);
-        mIsBound = true;
-    }
-
-    void doUnbindService()
-    {
-        if(mIsBound)
-        {
-            unbindService(Scon);
-            mIsBound = false;
-        }
+        return super.onKeyDown(keyCode, event);
     }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("ActivityLC", "MainOnCreate");
         setContentView(R.layout.activity_main);
+        Log.d("ActivityLC", "MainOnCreate");
+
         Log.d("ActivityLC", "MainSetView");
         play=(Button)findViewById(R.id.btnplay);
         rank=(Button)findViewById(R.id.btnrank);
@@ -78,20 +103,47 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         exit=(Button)findViewById(R.id.btnexit);
         title=(TextView)findViewById(R.id.title);
         maintext=(EditText)findViewById(R.id.maintext);
+        threadtext=(TextView)findViewById(R.id.threadtext);
 
         play.setOnClickListener(this);
         rank.setOnClickListener(this);
         help.setOnClickListener(this);
         setting.setOnClickListener(this);
         exit.setOnClickListener(this);
+        threadtext.setOnClickListener(this);
+
+
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         StartThread thread = new StartThread();
         thread.start();
-//        bgm.onPrepared();
-        doBindService();
-        Intent music = new Intent();
-        music.setClass(this, MusicService.class);
-        startService(music);
+
+//        Intent music = new Intent();
+//        music.setClass(this, MusicService.class);
+        startService(super.getMusic());
+        Log.d("Service- call Component", "startService()");
+        testMusicState=true;
+
+        Log.d("ProcessTestActivityLC", "Game Process PID: "+android.os.Process.myPid());
+
+
+        //백그라운드 스레드 테스트
+//        musicT= new Thread(new Runnable() {
+//            @Override
+//            public void run() {
+//            mPlayer = MediaPlayer.create(getApplicationContext(), R.raw.bgm);
+//            if (mPlayer != null) {
+//                mPlayer.setLooping(true);
+//                mPlayer.setVolume(100, 100);
+//          }
+//            mPlayer.start();
+//            }
+//        });
+//        musicT.start();
+        context_main=this;
+
+
+
     }
 
     @Override
@@ -99,18 +151,22 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (v.getId()){
             case R.id.btnplay:
                 i= new Intent(getApplicationContext(), PlayActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);
                 startActivityForResult(i, REQUEST_CODE_SCORE);
                 break;
             case R.id.btnrank:
                 i= new Intent(getApplicationContext(), RankActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);
                 startActivity(i);
                 break;
             case R.id.btnhelp:
                 i= new Intent(getApplicationContext(), HelpActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);
                 startActivity(i);
                 break;
             case R.id.btnsetting:
                 i= new Intent(getApplicationContext(), SettingActivity.class);
+                i.addFlags(Intent.FLAG_ACTIVITY_NO_USER_ACTION);
                 startActivity(i);
                 break;
             case R.id.btnexit:
@@ -118,6 +174,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 ExitDialog dialog= new ExitDialog(MainActivity.this, R.layout.exit_dialog,
                         R.id.btnexitfinal, R.id.btncanclefinal);
                 dialog.createDialog();
+                break;
+            case R.id.threadtext:
+//                doUnbindService();
+//                super.getmServ().stopServiceItself();
+//                i=new Intent(getApplicationContext(), NodisplayActivity.class);
+//                startActivity(i);
+                if(testMusicState){
+                    i=new Intent("com.devej.matchingcard.ACTION_PAUSE");
+                    testMusicState=false;
+                    this.sendBroadcast(i);
+                    Log.d("Broadcast", "broadcast to pause");
+                }else{
+                    i=new Intent("com.devej.matchingcard.ACTION_RESUME");
+                    testMusicState=true;
+                    this.sendBroadcast(i);
+                    Log.d("Broadcast", "broadcast to resume");
+                }
                 break;
         }
     }
@@ -138,6 +211,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+//    @Override
+//    public boolean onKeyDown(int keyCode, KeyEvent event) {
+//        return super.onKeyDown(keyCode, event);
+//        if (keyCode == KeyEvent.KEYCODE_HOME) {
+//            Log.d("ActivityLC", "Home Button Clicked");
+//            mServ.pauseMusic();
+//            return true;
+//        }else{
+//            return false;
+//        }
+//    } //key event를 포기한 이유는 home key가 인식 안되는 기기도 있기 때문
+        // -> 대신 onUserLeaveHint() 사용
+        // 간단하게 말해서 액티비티가 사용자 이벤트에 의해 백그라운드로 갈 때 콜백됨(홈키같은거)
+
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        //Log.d("ActivityLC", "Home Button");
+       // super.getmServ().pauseMusic();
+    }
+
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("ActivityLC", "MainOnRestart");
+//        super.getmServ().resumeMusic();
+    }
+
     private void addScore(int score, String name){
         dbhelper= new DBHelper(this, DBHelper.DATABASE_NAME,
                null, DBHelper.DATABASE_VERSION);
@@ -152,14 +253,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+
+
     @Override
     protected void onPause() {
         super.onPause();
         Log.d("ActivityLC", "MainOnPause");
 
-        if (mServ != null) {
-            mServ.pauseMusic();
-        }
+//        if (mServ != null) {
+//            mServ.pauseMusic();
+//        }
     }
 
     @Override
@@ -174,9 +277,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onResume();
         Log.d("ActivityLC", "MainOnResume");
 
-        if (mServ != null) {
-            mServ.resumeMusic();
-        }
+//        if (mServ != null) {
+//            mServ.resumeMusic();
+//        }
     }
 
     @Override
@@ -190,10 +293,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onDestroy();
         Log.d("ActivityLC", "MainOnDestroy");
 
-        doUnbindService();
+        //doUnbindService();
         Intent music = new Intent();
         music.setClass(this,MusicService.class);
         stopService(music);
+        Log.d("Service- call Component", "stopService()");
+    }
+
+    @Override
+    public boolean onKey(View view, int i, KeyEvent keyEvent) {
+        Log.d("ActivityLC", view+"에서 "+keyEvent+" 발생");
+        return false;
     }
 
     class StartThread extends Thread{
@@ -203,7 +313,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 handler.postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                        maintext.append("\n\n"+message);
+                        threadtext.setText("\n\n"+message);
                     }
                 },1000);
 

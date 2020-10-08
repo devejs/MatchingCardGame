@@ -37,14 +37,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:focusableInTouchMode="false"
-                android:lines="6"
+                android:lines="4"
                 android:background="@null"
                 android:text="Welcome to Matching Card Game\nCreated by EJS"
                 android:textSize="20sp"
                 android:textColor="#FFFFFF"
                 android:fontFamily="@font/dunggeunmo">
             </EditText>
-
+            <TextView
+                android:id="@+id/threadtext"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="20sp"
+                android:textColor="#FFFFFF"
+                android:fontFamily="@font/dunggeunmo"/>
 
         </LinearLayout>
 

@@ -15,6 +15,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.os.Handler;
 
+
 import java.util.Random;
 
 
@@ -24,6 +25,7 @@ public class CardBoardFragment extends Fragment {
     private OnFragmentInteractionListener mListener;
     private Context attActivity;
     GridView gridview;
+    GridBoardAdapter adapter;
     int[] cardImage;
     Boolean[] cardState;
 
@@ -35,6 +37,7 @@ public class CardBoardFragment extends Fragment {
     int selectedCard;
     int tempSelPos;
     ImageView tempView;
+    Handler hd= new Handler();
 
     //맨 처음에 데이터 생성-> 그리드뷰 inflate
     //그리드뷰 inflate하자마자 전부 다 back으로 이미지 덮어야 함
@@ -91,23 +94,45 @@ public class CardBoardFragment extends Fragment {
         //프래그먼트 구성요소 초기화
         //액티비티 완전히 생성된 이후-> 안정적
         super.onActivityCreated(savedInstanceState);
-        selectedCard = 0;
-        stageNo = ((PlayActivity) attActivity).playingstage; //stageNo 받아오기
-        calCardNo(stageNo); //cardNo, colNum 초기화됨
-        cardState = new Boolean[cardNo];
-        for (int i = 0; i < cardNo; i++) {
-            cardState[i] = false;
-            //i번째 카드 오픈 안된 상태-> 클리어 체크
-        }
-        cardImage = CreateRandCard(cardNo, colNum);
-        stagePoint = cardNo * 15;
-        gridview.setAdapter(new GridBoardAdapter(attActivity, cardImage));
-        gridview.setOnItemClickListener(gridBoardOnItemClickListener);
-        // 여기서 문제가
-        // 스테이지 클리어 점수가 넘어가면 액티비티에서 프래그먼트 data를 재생성해서
-        // gridview를 reset할건지 아니면 여기서 스테이지 클리어 확인하면
-        // 바로 data 재생성하고 reset할건지 으ㅡㅡㅁ으므으믕므
+        if(((PlayActivity)attActivity).message.equals("init")){
+            selectedCard = 0;
+            stageNo = ((PlayActivity) attActivity).playingstage; //stageNo 받아오기
+            calCardNo(stageNo); //cardNo, colNum 초기화됨
+            cardState = new Boolean[cardNo];
+            for (int i = 0; i < cardNo; i++) {
+                cardState[i] = false;
+                //i번째 카드 오픈 안된 상태-> 클리어 체크
+            }
+            cardImage = CreateRandCard(cardNo, colNum);
+            stagePoint = cardNo * 15;
+            adapter=new GridBoardAdapter(attActivity, cardImage);
+            for(int i=0; i<cardNo; i++){
+                adapter.addItem(cardImage[i]);
+            }
+            gridview.setAdapter(adapter);
+            gridview.setOnItemClickListener(gridBoardOnItemClickListener);
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    try {
+                        Thread.sleep(2000);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    hd.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            for(int i=0; i<cardNo; i++){
+                                adapter.modifyItem(i, false);
+                            }
+                            adapter.notifyDataSetChanged();
+                        }
+                    });
+                }
+            }).start();
+        }else if(((PlayActivity)attActivity).message.equals("recreate")){
 
+        }
     }
 
     @Override
@@ -238,9 +263,32 @@ public class CardBoardFragment extends Fragment {
         cardImage = CreateRandCard(cardNo, colNum);
         Log.d("FragmentInit", "카드 배열 길이" + cardImage.length);
         stagePoint = cardNo * 15;
-        gridview.setAdapter(new GridBoardAdapter(attActivity, cardImage));
+        adapter=new GridBoardAdapter(attActivity, cardImage);
+        for(int i=0; i<cardNo; i++){
+            adapter.addItem(cardImage[i]);
+        }
+        gridview.setAdapter(adapter);
         gridview.setOnItemClickListener(gridBoardOnItemClickListener);
         Log.d("FragmentInit", "어댑터 데이터 적용");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Thread.sleep(2000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                hd.post(new Runnable() {
+                    @Override
+                    public void run() {
+                        for(int i=0; i<cardNo; i++){
+                            adapter.modifyItem(i, false);
+                        }
+                        adapter.notifyDataSetChanged();
+                    }
+                });
+            }
+        }).start();
     }
 
     public int[] CreateRandCard(int cardNo, int colNum) {

@@ -6,9 +6,11 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.ServiceConnection;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -16,6 +18,7 @@ import android.os.IBinder;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.WindowManager;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
@@ -23,7 +26,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.os.Handler;
 
-public class PlayActivity extends AppCompatActivity implements View.OnClickListener,
+public class PlayActivity extends BaseActivity implements View.OnClickListener,
         CardBoardFragment.OnFragmentInteractionListener {
 
     CardBoardFragment board;
@@ -35,9 +38,12 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
     public int playingstage=1 , playingscore=0 ;
     int pauseTimeSec=0;
     Thread timerThread;
+    String message;
 
     FragmentManager fragmentManager;
     FragmentTransaction fragmentTransaction;
+
+    BroadcastReceiver screenReceiver;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,8 +70,10 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         // 프래그먼트 내부 세부 컴포넌트 접근
         // 프래그먼트 매니저 선언
         fragmentManager = getSupportFragmentManager();
+        message="init";
 
-        clearData();
+        //clearData();
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
 
         beforeplaying.setOnTouchListener(new View.OnTouchListener() {
             @Override
@@ -89,10 +97,30 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         //OnPause OnResume으로 재구현해야될듯
         //액티비티 수명주기 추가 공부 필요!!
 
-        doBindService();
-        Intent music = new Intent();
-        music.setClass(this, MusicService.class);
-        startService(music);
+        screenReceiver = new BroadcastReceiver() {
+            public static final String ScreenOff= "android.intent.action.SCREEN_OFF";
+            public static final String ScreenOn= "android.intent.action.SCREEN_ON";
+
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if(intent.getAction().equals(ScreenOff)){
+                    Log.d("Broadcast", "Screen Off");
+                    timerThread.interrupt();
+                    PlayActivity.super.getmServ().pauseMusic();
+                }else if(intent.getAction().equals(ScreenOn)){
+                    Log.d("Broadcast", "Screen On");
+                    message="recreate";
+                    Log.d("Broadcast", message);
+                    beforeplaying.setVisibility(View.VISIBLE);
+                    PlayActivity.super.getmServ().resumeMusic();
+                }
+            }
+        };
+        IntentFilter intentFilter= new IntentFilter();
+        intentFilter.addAction(Intent.ACTION_SCREEN_ON);
+        intentFilter.addAction(Intent.ACTION_SCREEN_OFF);
+        registerReceiver(screenReceiver, intentFilter);
+
     }
 
     @Override
@@ -156,69 +184,84 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         //필요 없어짐
     }
 
-    private boolean mIsBound = false;
-    private MusicService mServ;
-    private ServiceConnection Scon =new ServiceConnection(){
+//    private boolean mIsBound = false;
+//    private MusicService mServ;
+//    private ServiceConnection Scon =new ServiceConnection(){
+//
+//        public void onServiceConnected(ComponentName name, IBinder
+//                binder) {
+//            mServ = ((MusicService.ServiceBinder)binder).getService();
+//        }
+//
+//        public void onServiceDisconnected(ComponentName name) {
+//            mServ = null;
+//        }
+//    };
+//
+//    void doBindService(){
+//        bindService(new Intent(this,MusicService.class),
+//                Scon,Context.BIND_AUTO_CREATE);
+//        mIsBound = true;
+//    }
+//
+//    void doUnbindService()
+//    {
+//        if(mIsBound)
+//        {
+//            unbindService(Scon);
+//            mIsBound = false;
+//        }
+//    }
 
-        public void onServiceConnected(ComponentName name, IBinder
-                binder) {
-            mServ = ((MusicService.ServiceBinder)binder).getService();
-        }
-
-        public void onServiceDisconnected(ComponentName name) {
-            mServ = null;
-        }
-    };
-
-    void doBindService(){
-        bindService(new Intent(this,MusicService.class),
-                Scon,Context.BIND_AUTO_CREATE);
-        mIsBound = true;
-    }
-
-    void doUnbindService()
-    {
-        if(mIsBound)
-        {
-            unbindService(Scon);
-            mIsBound = false;
-        }
+//    @Override
+//    protected void onUserLeaveHint() {
+//        super.onUserLeaveHint();
+//        Log.d("ActivityLC", "Home Button");
+//        mServ.pauseMusic();
+//    }
+//
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Log.d("ActivityLC", "PlayOnRestart");
+        timerThread.interrupt();
+        beforeplaying.setVisibility(View.VISIBLE);
     }
 
     @Override
     protected void onPause() {
         super.onPause();
         Log.d("ActivityLC", "PlayOnPause");
-        if (mServ != null) {
-            mServ.pauseMusic();
-        }
+//        if (mServ != null) {
+//            mServ.pauseMusic();
+//        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (mServ != null) {
-            mServ.resumeMusic();
-        }
+        Log.d("ActivityLC", "PlayOnResume");
+//        if (mServ != null) {
+//            mServ.resumeMusic();
+//        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        Log.d("ActivityLC", "Play onDestroy");
+//        if(timerThread.getState()!= Thread.State.TERMINATED){
+//            timerThread.interrupt();
+//        }
+        unregisterReceiver(screenReceiver);
 
-        doUnbindService();
-        Intent music = new Intent();
-        music.setClass(this,MusicService.class);
-        stopService(music);
+//        music.setClass(MainActivity.this ,MusicService.class);
+        Log.d("sleepy", "before");
+        //stopService(super.getMusic());
+        stopService(new Intent(getApplicationContext(), MusicService.class));
+        Log.d("sleepy", "after"+ super.getmServ());
+        //doUnbindService();
     }
-
-//    @Override
-//    protected void onPause() {
-//        super.onPause();
-////        saveState();
-//        Log.d("activityLife", "Pause");
-//    }
 
     private void saveState() {
         SharedPreferences pref= getSharedPreferences("pref", Activity.MODE_PRIVATE);
@@ -342,6 +385,8 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
         int leftSec=180-pauseTimeSec;
         Handler timeHd= new Handler();
 
+        //시간 변경 메소드 하나 만들어도 될 듯 몇분 할지 int 파라미터로 받아서
+
         @Override
         public void run() {
             for(int i=0; i<leftSec; i++){
@@ -376,6 +421,14 @@ public class PlayActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
             Log.d("timer", "Timer 종료");
+            timeHd.post(new Runnable() {
+                @Override
+                public void run() {
+                    ExitDialog();
+                    Log.d("timer","스레드 객체 상태 확인"+timerThread);
+                    Log.d("timer", "스레드 getState: "+timerThread.getState());
+                }
+            });
         }
     }
 

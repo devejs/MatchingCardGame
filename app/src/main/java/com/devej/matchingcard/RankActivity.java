@@ -17,7 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class RankActivity extends AppCompatActivity implements View.OnClickListener {
+public class RankActivity extends BaseActivity implements View.OnClickListener {
 
     DBHelper dbhelper;
     SQLiteDatabase database;
@@ -51,11 +51,6 @@ public class RankActivity extends AppCompatActivity implements View.OnClickListe
         executeQuery();
         rankView.setAdapter(adapter);
 
-        doBindService();
-        Intent music = new Intent();
-        music.setClass(this, MusicService.class);
-        startService(music);
-
     }
 
     public void executeQuery(){
@@ -85,60 +80,23 @@ public class RankActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private boolean mIsBound = false;
-    private MusicService mServ;
-    private ServiceConnection Scon =new ServiceConnection(){
-
-        public void onServiceConnected(ComponentName name, IBinder
-                binder) {
-            mServ = ((MusicService.ServiceBinder)binder).getService();
-        }
-
-        public void onServiceDisconnected(ComponentName name) {
-            mServ = null;
-        }
-    };
-
-    void doBindService(){
-        bindService(new Intent(this,MusicService.class),
-                Scon, Context.BIND_AUTO_CREATE);
-        mIsBound = true;
-    }
-
-    void doUnbindService()
-    {
-        if(mIsBound)
-        {
-            unbindService(Scon);
-            mIsBound = false;
-        }
-    }
-
     @Override
     protected void onPause() {
         super.onPause();
+        Log.d("ActivityLC", "Rank Pause");
 
-        if (mServ != null) {
-            mServ.pauseMusic();
-        }
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d("ActivityLC", "Rank Resume");
 
-        if (mServ != null) {
-            mServ.resumeMusic();
-        }
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
 
-        doUnbindService();
-        Intent music = new Intent();
-        music.setClass(this,MusicService.class);
-        stopService(music);
     }
 }
