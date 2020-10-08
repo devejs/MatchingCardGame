@@ -25,7 +25,9 @@ You are the newbie learner who wants to be a programmer. For choosing the progra
 5. You earn scores whenver two cards match.
 6. Store the score with your name.  
 
-[Detailed playing screenshots]()
+[Detailed playing screenshots](https://github.com/devejs/MatchingCardGame/tree/master/screenshots)  
+
+Excuted in LG V10(AOS 7.0)
 
 
 ## Functions not developed yet
@@ -36,3 +38,4 @@ You are the newbie learner who wants to be a programmer. For choosing the progra
 ### Known Bugs
 * Background Music
 * Play - duplicated touch
+* Play -
